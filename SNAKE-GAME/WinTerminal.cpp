@@ -17,14 +17,12 @@ void TERMINAL_CURSOR_JUMP(int x, int y)
 
 void TERMINAL_CURSOR_HIDE()
 {
-    // HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-    // CONSOLE_CURSOR_INFO cursor;
+    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO cursor;
 
-    // GetConsoleCursorInfo(console, &cursor);
-    // cursor.bVisible = FALSE;
-    // SetConsoleCursorInfo(console, &cursor);
-
-    system("cls");
+    GetConsoleCursorInfo(console, &cursor);
+    cursor.bVisible = FALSE;
+    SetConsoleCursorInfo(console, &cursor);
 }
 
 void TERMINAL_CLEAR()
