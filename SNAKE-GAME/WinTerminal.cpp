@@ -17,17 +17,28 @@ void TERMINAL_CURSOR_JUMP(int x, int y)
 
 void TERMINAL_CURSOR_HIDE()
 {
-    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_CURSOR_INFO cursor;
+    // HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+    // CONSOLE_CURSOR_INFO cursor;
 
-    GetConsoleCursorInfo(console, &cursor);
-    cursor.bVisible = FALSE;
-    SetConsoleCursorInfo(console, &cursor);
+    // GetConsoleCursorInfo(console, &cursor);
+    // cursor.bVisible = FALSE;
+    // SetConsoleCursorInfo(console, &cursor);
+
+    system("cls");
 }
 
 void TERMINAL_CLEAR()
 {
-    system("cls");
+    COORD topLeft={0,0};
+    HANDLE console=GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO screen;
+    DWORD written;
+
+    GetConsoleScreenBufferInfo(console,&screen);
+    FillConsoleOutputCharacterA(console,' ',screen.dwSize.X * screen.dwSize.Y, topLeft, &written);
+    FillConsoleOutputAttribute(console, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE,
+                               screen.dwSize.X * screen.dwSize.Y, topLeft,&written);
+    SetConsoleCursorPosition(console,topLeft);
 }
 
 void TERMINAL_EXIT()
