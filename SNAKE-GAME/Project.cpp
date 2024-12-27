@@ -11,8 +11,10 @@
 using namespace std;
 
 #define DELAY_CONST 100000
-#define MAX_SCORE 20
+#define BOARD_HEIGHT 50
+#define BOARD_WIDTH 25
 #define START_SIZE 10
+#define MAX_SCORE BOARD_HEIGHT * BOARD_WIDTH - START_SIZE
 
 // Global Objects
 Player *playerPtr = nullptr;
@@ -53,6 +55,9 @@ int main(void)
 
     TERMINAL_CURSOR_HIDE();
 
+    // Black Text on White Background
+    TERMINAL_COLOR(15, 0);
+
     Initialize();
 
     while (gameMech->getExitFlagStatus() == false)
@@ -75,7 +80,7 @@ void Initialize(void)
     srand(time(NULL));
 
     // Allocating Heap Memory
-    gameMech = new GameMechs(10, 20); 
+    gameMech = new GameMechs(BOARD_WIDTH, BOARD_HEIGHT); 
     playerPtr = new Player(gameMech, 1); 
 
     // Initialising Global Variables
@@ -100,12 +105,13 @@ void GetInput(void)
     if (_kbhit()) {
         gameMech->setInput(_getch()); // Get Input
         // Increase snake size to 10 on first key press
-        if (playerPtr->getPlayerPos()->getSize() == 1) {
-            objPos prevTail = playerPtr->getPlayerPos()->getTailElement(); // Store previous tail element
-            for (int i = 0; i < 9; i++) {
-                playerPtr->getPlayerPos()->insertTail(objPos(prevTail.getX(), prevTail.getY(), symb));
+        if (gameMech->getInput() == 'w' || gameMech->getInput() == 'a' || gameMech->getInput() == 's' || gameMech->getInput() == 'd')
+            if (playerPtr->getPlayerPos()->getSize() == 1) {
+                objPos prevTail = playerPtr->getPlayerPos()->getTailElement(); // Store previous tail element
+                for (int i = 0; i < 9; i++) {
+                    playerPtr->getPlayerPos()->insertTail(objPos(prevTail.getX(), prevTail.getY(), symb));
+                }
             }
-        }
     }
     else {
         gameMech->clearInput(); // Clear input if no input is given
@@ -161,21 +167,25 @@ void DrawScreen(void)
 
     TERMINAL_CURSOR_JUMP(prevTailPos->getY() * 3, prevTailPos->getX() * 2);
     cout << "   ";
-    TERMINAL_CURSOR_JUMP(prevHeadPos->getY() * 3, prevHeadPos->getX() * 2);
-    cout << "🍑";
+
+    TERMINAL_CURSOR_JUMP(0, 0);
+    cout << "🍏";
 
     for (int k = 0; k < OBJ_SIZE; k++)
     {
-        if (k == 0)
+        if (k != 0)
         {
+            
             TERMINAL_CURSOR_JUMP(playerPtr->getPlayerPos()->getElement(k).getY() * 3, playerPtr->getPlayerPos()->getElement(k).getX() * 2);
-            cout << " 🐍";
+            cout << u8" 🟩";
         }
         else 
         {
             TERMINAL_CURSOR_JUMP(playerPtr->getPlayerPos()->getElement(k).getY() * 3, playerPtr->getPlayerPos()->getElement(k).getX() * 2);
-            cout << u8" 🟩";
-        }
+            cout << " 🐍";
+        } 
+        
+            
     }
 
     TERMINAL_CURSOR_JUMP(gameMech->getFoodPos().getY() * 3, gameMech->getFoodPos().getX() * 2);
@@ -195,31 +205,33 @@ void CleanUp(void)
 {
     TERMINAL_CLEAR();
 
+    TERMINAL_COLOR(15, 0);
+
 
     // Display Win/Lose Message
     if (gameMech->getLoseFlagStatus())
     {
-        printf("                                                                       .-')      ('-.          \n"      );
-        printf("                                                                      ( OO ).  _(  OO)             \n"  );
-        printf("    ,--.   ,--..-'),-----.  ,--. ,--.          ,--.      .-'),-----. (_)---\\_)(,------.       \n"      );
-        printf("     \\  `.'  /( OO'  .-.  ' |  | |  |          |  |.-') ( OO'  .-.  '/    _ |  |  .---'      \n"       );
-        printf("   .-')     / /   |  | |  | |  | | .-')        |  | OO )/   |  | |  |\\  :` `.  |  |             \n"    );
-        printf("  (OO  \\   /  \\_) |  |\\|  | |  |_|( OO )       |  |`-' |\\_) |  |\\|  | '..`''.)(|  '--.        \n"  );
-        printf("   |   /  /\\_   \\ |  | |  | |  | | `-' /      (|  '---.'  \\ |  | |  |.-._)   \\ |  .--'      \n"     );
-        printf("   `-./  /.__)   `'  '-'  '('  '-'(_.-'        |      |    `'  '-'  '\\       / |  `---.        \n"     );
-        printf("     `--'          `-----'   `-----'           `------'      `-----'  `-----'  `------'        \n\n"    );
+        TERMINAL_DELAY_SINGLE_LINE_printf("                                                                       .-')      ('-.          \n"      );
+        TERMINAL_DELAY_SINGLE_LINE_printf("                                                                      ( OO ).  _(  OO)             \n"  );
+        TERMINAL_DELAY_SINGLE_LINE_printf("    ,--.   ,--..-'),-----.  ,--. ,--.          ,--.      .-'),-----. (_)---\\_)(,------.       \n"      );
+        TERMINAL_DELAY_SINGLE_LINE_printf("     \\  `.'  /( OO'  .-.  ' |  | |  |          |  |.-') ( OO'  .-.  '/    _ |  |  .---'      \n"       );
+        TERMINAL_DELAY_SINGLE_LINE_printf("   .-')     / /   |  | |  | |  | | .-')        |  | OO )/   |  | |  |\\  :` `.  |  |             \n"    );
+        TERMINAL_DELAY_SINGLE_LINE_printf("  (OO  \\   /  \\_) |  |\\|  | |  |_|( OO )       |  |`-' |\\_) |  |\\|  | '..`''.)(|  '--.        \n"  );
+        TERMINAL_DELAY_SINGLE_LINE_printf("   |   /  /\\_   \\ |  | |  | |  | | `-' /      (|  '---.'  \\ |  | |  |.-._)   \\ |  .--'      \n"     );
+        TERMINAL_DELAY_SINGLE_LINE_printf("   `-./  /.__)   `'  '-'  '('  '-'(_.-'        |      |    `'  '-'  '\\       / |  `---.        \n"     );
+        TERMINAL_DELAY_SINGLE_LINE_printf("     `--'          `-----'   `-----'           `------'      `-----'  `-----'  `------'        \n\n"    );
     }
     else
     {
-        printf("\n     ____     __   ,-----.      ___    _         .--.      .--..-./`) ,---.   .--.          _ _  .--.     \n"         );
-        printf("     \\   \\   /  /.'  .-,  '.  .'   |  | |        |  |_     |  |\\ .-.')|    \\  |  |         ( ` ) `-. \\    \n"      );
-        printf("      \\  _. /  '/ ,-.|  \\ _ \\ |   .'  | |        | _( )_   |  |/ `-' \\|  ,  \\ |  |        (_ o _)   \\_\\   \n"    );
-        printf("       _( )_ .';  \\  '_ /  | :.'  '_  | |        |(_ o _)  |  | `-'`\"`|  |\\_ \\|  |         (_,_)   _( )_  \n"       );
-        printf("   ___(_ o _)' |  _`,/ \\ _/  |'   ( \\.-.|        | (_,_) \\ |  | .---. |  _( )_\\  |                (_ o _) \n"       );
-        printf("  |   |(_,_)'  : (  '\\_/ \\   ;' (`. _` /|        |  |/    \\|  | |   | | (_ o _)  |           _     (_,_) \n"         );
-        printf("  |   `-'  /    \\ `\"/  \\  ) / | (_ (_) _)        |  '  /\\  `  | |   | |  (_,_)\\  |         _( )_    / /   \n"      );
-        printf("   \\      /      '. \\_/``\".'   \\ /  . \\ /        |    /  \\    | |   | |  |    |  |        (_ o _).-' /    \n"     );
-        printf("    `-..-'         '-----'      ``-'`-''         `---'    `---` '---' '--'    '--'         (_,_) `--'     \n"           );
+        TERMINAL_DELAY_SINGLE_LINE_printf("\n     ____     __   ,-----.      ___    _         .--.      .--..-./`) ,---.   .--.          _ _  .--.     \n"         );
+        TERMINAL_DELAY_SINGLE_LINE_printf("     \\   \\   /  /.'  .-,  '.  .'   |  | |        |  |_     |  |\\ .-.')|    \\  |  |         ( ` ) `-. \\    \n"      );
+        TERMINAL_DELAY_SINGLE_LINE_printf("      \\  _. /  '/ ,-.|  \\ _ \\ |   .'  | |        | _( )_   |  |/ `-' \\|  ,  \\ |  |        (_ o _)   \\_\\   \n"    );
+        TERMINAL_DELAY_SINGLE_LINE_printf("       _( )_ .';  \\  '_ /  | :.'  '_  | |        |(_ o _)  |  | `-'`\"`|  |\\_ \\|  |         (_,_)   _( )_  \n"       );
+        TERMINAL_DELAY_SINGLE_LINE_printf("   ___(_ o _)' |  _`,/ \\ _/  |'   ( \\.-.|        | (_,_) \\ |  | .---. |  _( )_\\  |                (_ o _) \n"       );
+        TERMINAL_DELAY_SINGLE_LINE_printf("  |   |(_,_)'  : (  '\\_/ \\   ;' (`. _` /|        |  |/    \\|  | |   | | (_ o _)  |           _     (_,_) \n"         );
+        TERMINAL_DELAY_SINGLE_LINE_printf("  |   `-'  /    \\ `\"/  \\  ) / | (_ (_) _)        |  '  /\\  `  | |   | |  (_,_)\\  |         _( )_    / /   \n"      );
+        TERMINAL_DELAY_SINGLE_LINE_printf("   \\      /      '. \\_/``\".'   \\ /  . \\ /        |    /  \\    | |   | |  |    |  |        (_ o _).-' /    \n"     );
+        TERMINAL_DELAY_SINGLE_LINE_printf("    `-..-'         '-----'      ``-'`-''         `---'    `---` '---' '--'    '--'         (_,_) `--'     \n"           );
     }
     // De-allocate Heap Memory
     delete playerPtr;

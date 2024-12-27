@@ -1,11 +1,47 @@
 #include <windows.h>
 #include "WinTerminal.h"
 
+// #################################################################
+// ####################   TERMINAL SOUND   #########################
+// #################################################################
+
+void TERMINAL_SOUND(int freq, int dur)
+{
+    Beep(freq, dur);
+}
+
+// #################################################################
+// ####################   TERMINAL APPEARANCE   ####################
+// #################################################################
+
 void TERMINAL_COLOR(int txt_color, int bg_color)
 {
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(console, (bg_color << 4) | txt_color);
 }
+
+void TERMINAL_DELAY_SINGLE_LINE_printf(std::string str, int time)
+{
+    int n = str.length();
+
+    if (time == 0)
+        time = 1;
+
+    for (int i = 0; i < n; ++i)
+    {
+        while (str[i] == ' ')
+        {
+            printf(" ");
+            i++;
+        }
+        printf("%c", str[i]);
+        Sleep(time);
+    }    
+}
+
+// #################################################################
+// #################   TERMINAL CURSOR POSITION   ##################
+// #################################################################
 
 void TERMINAL_CURSOR_JUMP(int x, int y)
 {
@@ -25,6 +61,9 @@ void TERMINAL_CURSOR_HIDE()
     SetConsoleCursorInfo(console, &cursor);
 }
 
+// #################################################################
+// ####################   TERMINAL CLOSE   #########################
+// #################################################################
 void TERMINAL_CLEAR()
 {
     COORD topLeft={0,0};
