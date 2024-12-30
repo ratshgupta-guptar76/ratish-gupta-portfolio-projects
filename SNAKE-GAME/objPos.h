@@ -1,6 +1,12 @@
 #ifndef OBJPOS_H
 #define OBJPOS_H
 
+#include <iostream>
+#include <stdlib.h>
+#include <string>
+
+using namespace std;
+
 // Not really a C++ thing
 typedef struct 
 {
@@ -12,11 +18,11 @@ class objPos
 {
     private:
         Pos* pos;
-        char symbol;
+        string symbol;
 
     public:
         objPos();
-        objPos(int xPos, int yPos, char sym);
+        objPos(int xPos, int yPos, string sym);
         objPos(const objPos &o);
         objPos& operator = (const objPos &o);
         
@@ -25,13 +31,13 @@ class objPos
         ~objPos();
         
         void setObjPos(objPos o);
-        void setObjPos(int xPos, int yPos, char sym);
+        void setObjPos(int xPos, int yPos, string sym);
 
         objPos getObjPos() const;
-        char getSymbol() const;
+        string getSymbol() const;
         int getX(); // Get Row Number/x-value
         int getY(); // Get Column Number/y-value
-        char getSymbolIfPosEqual(const objPos* refPos) const;
+        string getSymbolIfPosEqual(const objPos* refPos) const;
         
         bool isPosEqual(const objPos* refPos) const;
 };

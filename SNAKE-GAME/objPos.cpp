@@ -1,6 +1,4 @@
 #include "objPos.h"
-#include <stdlib.h>
-#include <iostream>
 
 using namespace std;
 
@@ -9,10 +7,10 @@ objPos::objPos()
     pos = new Pos;
     pos->x = 0;
     pos->y = 0;
-    symbol = 0;
+    symbol = '\0';
 }
 
-objPos::objPos(int xPos, int yPos, char sym)
+objPos::objPos(int xPos, int yPos, string sym)
 {
     pos = new Pos;
     pos->x = xPos;
@@ -21,8 +19,6 @@ objPos::objPos(int xPos, int yPos, char sym)
 }
 
 // Respect the rule of six / minimum four
-// [TODO] Implement the missing special member functions to meet the minimum four rule
-// Defined By Ratish - Copy Cnostructor
 objPos::objPos(const objPos &o)
 {
     pos = new Pos;
@@ -43,7 +39,6 @@ objPos& objPos::operator = (const objPos &o)
     return *this;
 }
 
-// Defined By Ratish - Destructor
 objPos::~objPos()
 {
     delete pos;
@@ -57,7 +52,7 @@ void objPos::setObjPos(objPos o)
     symbol = o.symbol;
 }
 
-void objPos::setObjPos(int xPos, int yPos, char sym)
+void objPos::setObjPos(int xPos, int yPos, string sym)
 {
     pos->x = xPos;
     pos->y = yPos;
@@ -74,7 +69,7 @@ objPos objPos::getObjPos() const
     return returnPos;
 }
 
-char objPos::getSymbol() const
+string objPos::getSymbol() const
 {
     return symbol;
 }
@@ -84,15 +79,13 @@ bool objPos::isPosEqual(const objPos* refPos) const
     return (refPos->pos->x == pos->x && refPos->pos->y == pos->y);
 }
 
-char objPos::getSymbolIfPosEqual(const objPos* refPos) const
+string objPos::getSymbolIfPosEqual(const objPos* refPos) const
 {
     if(isPosEqual(refPos))
         return symbol;
     else
         return 0;
 }
-
-// Defined By Ratish - Getter method for respective co-ordinates
 
 int objPos::getX()
 {

@@ -14,6 +14,20 @@ void TERMINAL_SOUND(int freq, int dur)
 // ####################   TERMINAL APPEARANCE   ####################
 // #################################################################
 
+void TERMINAL_SIZE(int height, int width)
+{
+    HWND console = GetConsoleWindow();
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SMALL_RECT r;
+    COORD coord;
+
+    coord = {static_cast<SHORT>(width), static_cast<SHORT>(height)};
+    SetConsoleScreenBufferSize(hConsole, coord);
+
+    r = {0, 0, static_cast<SHORT>(width - 1), static_cast<SHORT>(height - 1)};
+    SetConsoleWindowInfo(hConsole, TRUE, &r);
+}
+
 void TERMINAL_COLOR(int txt_color, int bg_color)
 {
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -45,8 +59,8 @@ void TERMINAL_DELAY_SINGLE_LINE_printf(std::string str, int time)
 
 void TERMINAL_CURSOR_JUMP(int x, int y)
 {
-    COORD cursor = {static_cast<SHORT>(x), static_cast<SHORT>(y)};
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD cursor = {static_cast<SHORT>(x), static_cast<SHORT>(y)};
 
     SetConsoleCursorPosition(console, cursor);
 }
@@ -66,8 +80,8 @@ void TERMINAL_CURSOR_HIDE()
 // #################################################################
 void TERMINAL_CLEAR()
 {
-    COORD topLeft={0,0};
     HANDLE console=GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD topLeft={0,0};    
     CONSOLE_SCREEN_BUFFER_INFO screen;
     DWORD written;
 

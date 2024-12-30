@@ -7,6 +7,7 @@
 #include <conio.h>
 #include <stdlib.h>
 #include <ctime>
+#include <iomanip>
 
 using namespace std;
 
@@ -14,7 +15,15 @@ using namespace std;
 #define BOARD_HEIGHT 50
 #define BOARD_WIDTH 25
 #define START_SIZE 10
-#define MAX_SCORE BOARD_HEIGHT * BOARD_WIDTH - START_SIZE
+#define MAX_SCORE (BOARD_HEIGHT-1) * (BOARD_WIDTH-1) - START_SIZE
+
+#define EMPTY_CHAR u8" "
+#define BORDER_CHAR_BLANK u8"███"
+#define BORDER_CHAR_PATTERN u8"█░█"
+#define BORDER_CHAR_PATTERN_2 u8"░█░"
+#define SNAKE_HEAD_CHAR u8"🐍"
+#define SNAKE_BODY_CHAR u8"-"
+#define FOOD_CHAR u8"🥚"
 
 // Global Objects
 Player *playerPtr = nullptr;
@@ -23,9 +32,8 @@ GameMechs *gameMech = nullptr;
 // Global Variables
 int x;
 int y;
-int symb;
+string symb;
 char input;
-string buffer;
 bool firstRun = true;
 objPos* prevHeadPos;
 objPos* prevTailPos;
@@ -38,7 +46,6 @@ int j;
 int HEIGHT;
 int WIDTH;
 int OBJ_SIZE;
-string Missing_Row = "";
 
 // Function Prototypes
 void Initialize(void);
@@ -51,12 +58,16 @@ void CleanUp(void);
 int main(void)
 {
 
+    // system("start cmd /c \"chcp 65001 & Project.exe\"");
+
     SetConsoleOutputCP(CP_UTF8);
 
     TERMINAL_CURSOR_HIDE();
 
+    // TERMINAL_SIZE(BOARD_HEIGHT * 4, BOARD_WIDTH * 4);
+
     // Black Text on White Background
-    TERMINAL_COLOR(15, 0);
+    TERMINAL_COLOR(12, 0);
 
     Initialize();
 
@@ -83,6 +94,12 @@ void Initialize(void)
     gameMech = new GameMechs(BOARD_WIDTH, BOARD_HEIGHT); 
     playerPtr = new Player(gameMech, 1); 
 
+    // // Set initial position of the snake
+    // for (int i = 0; i < START_SIZE; i++) {
+    //     playerPtr->getPlayerPos()->insertTail(objPos(BOARD_WIDTH / 2, BOARD_HEIGHT / 2 + i, SNAKE_BODY_CHAR));
+    // }
+    // playerPtr->getPlayerPos()->getHeadElement().setObjPos(BOARD_WIDTH / 2, BOARD_HEIGHT / 2, SNAKE_HEAD_CHAR);
+
     // Initialising Global Variables
     HEIGHT = gameMech->getBoardSizeX(); 
     WIDTH = gameMech->getBoardSizeY();   
@@ -91,13 +108,6 @@ void Initialize(void)
 
     prevHeadPos = new objPos();
     prevTailPos = new objPos();
-
-    buffer += u8"===============================\n\t SNAKE GAME \n===============================\n\n";
-
-    // Generate Missing Row
-    for (i = 0; i < WIDTH; i++)    
-        (i == 0 || i == WIDTH - 1) ? Missing_Row += "░█░" : Missing_Row += "   ";
-
 }
 
 void GetInput(void)
@@ -156,9 +166,13 @@ void DrawScreen(void)
                 if (i == 0 || i == HEIGHT - 1 || j == 0 || j == WIDTH - 1)
                 {
                     TERMINAL_CURSOR_JUMP(j * 3, i * 2);
-                    cout << u8"█░█";
+                    cout << BORDER_CHAR_BLANK;
                     TERMINAL_CURSOR_JUMP(j * 3, i * 2 + 1);
-                    cout << u8"░█░";
+                    cout << BORDER_CHAR_BLANK;
+                }
+                else {
+                    TERMINAL_CURSOR_JUMP(j * 3, i * 2);
+                    cout << EMPTY_CHAR; 
                 }
             }
         }
@@ -166,10 +180,10 @@ void DrawScreen(void)
     }
 
     TERMINAL_CURSOR_JUMP(prevTailPos->getY() * 3, prevTailPos->getX() * 2);
-    cout << "   ";
+    cout << EMPTY_CHAR;
 
     TERMINAL_CURSOR_JUMP(0, 0);
-    cout << "🍏";
+    cout << setw(3) << setfill('0') << gameMech->getScore(); 
 
     for (int k = 0; k < OBJ_SIZE; k++)
     {
@@ -177,19 +191,19 @@ void DrawScreen(void)
         {
             
             TERMINAL_CURSOR_JUMP(playerPtr->getPlayerPos()->getElement(k).getY() * 3, playerPtr->getPlayerPos()->getElement(k).getX() * 2);
-            cout << u8" 🟩";
+            cout << playerPtr->getPlayerPos()->getElement(k).getSymbol();
         }
         else 
         {
             TERMINAL_CURSOR_JUMP(playerPtr->getPlayerPos()->getElement(k).getY() * 3, playerPtr->getPlayerPos()->getElement(k).getX() * 2);
-            cout << " 🐍";
+            cout << playerPtr->getPlayerPos()->getHeadElement().getSymbol();
         } 
         
             
     }
 
     TERMINAL_CURSOR_JUMP(gameMech->getFoodPos().getY() * 3, gameMech->getFoodPos().getX() * 2);
-    cout << " 🥚";
+    cout << FOOD_CHAR;
 
     // Store Previous Head and Tail Positions
     *prevHeadPos = playerPtr->getPlayerPos()->getHeadElement();

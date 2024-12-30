@@ -7,7 +7,7 @@ class objPosArrayList
 {
     private:
         struct Node {
-            objPos data;
+            objPos OBJ;
             Node* next;
         };
         Node* head;
@@ -23,6 +23,7 @@ class objPosArrayList
         void insertTail(objPos thisPos);
         void removeHead();
         void removeTail();
+        void makeHeadBody(string sym);
         
         objPos getHeadElement() const;
         objPos getTailElement() const;

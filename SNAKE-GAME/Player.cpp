@@ -1,6 +1,13 @@
 #include "Player.h"
 #include "objPosArrayList.h"
 
+#define BODY_SYMBOL u8"🟦"
+#define HEAD_SYMBOL_UP u8"🐍"
+#define HEAD_SYMBOL_DOWN u8"🐍"
+#define HEAD_SYMBOL_LEFT u8"🐍"
+#define HEAD_SYMBOL_RIGHT u8"🐍"
+
+
 Player::Player(GameMechs *thisGMRef, int initialLength)
 {
     mainGameMechsRef = thisGMRef;
@@ -14,7 +21,7 @@ Player::Player(GameMechs *thisGMRef, int initialLength)
     int initialY = 5;
 
     for (int i = 0; i < initialLength; ++i) {
-        objPos initialPos(initialX, initialY - i, '*');
+        objPos initialPos(initialX, initialY - i, BODY_SYMBOL);
         playerPos->insertHead(initialPos);
     }
 }
@@ -96,28 +103,28 @@ void Player::movePlayer()
     int yPos = playerPos->getHeadElement().getY();
 
     // Head Symbol
-    char headSymbol;
+    string headSymbol;
 
     switch (myDir)
     {
     case UP:
         xPos -= 1;
-        headSymbol = '^';
+        headSymbol = HEAD_SYMBOL_UP;
         break;
 
     case RIGHT:
         yPos += 1;
-        headSymbol = '>';
+        headSymbol = HEAD_SYMBOL_RIGHT;
         break;
 
     case DOWN:
         xPos += 1;
-        headSymbol = 'v';
+        headSymbol = HEAD_SYMBOL_DOWN;
         break;
 
     case LEFT:
         yPos -= 1;
-        headSymbol = '<';
+        headSymbol = HEAD_SYMBOL_LEFT;
         break;
 
     default:
@@ -143,6 +150,8 @@ void Player::movePlayer()
         yPos = 1;
     }
 
+    playerPos->makeHeadBody(BODY_SYMBOL);
+    
     objPos newHead;
     newHead.setObjPos(xPos, yPos, headSymbol);
 
@@ -157,5 +166,3 @@ void Player::movePlayer()
     else
         playerPos->removeTail();
 }
-
-// More methods to be added

@@ -10,14 +10,14 @@
 GameMechs::GameMechs()
     : boardSizeX(15), boardSizeY(30), input(0), score(0), exitFlag(false), loseFlag(true)
 {
-    foodPos = new objPos(1,1, '@');
+    foodPos = new objPos(1,1, "@");
 }
 
 // Method completed by Ratish - Used for debugging Player class
 GameMechs::GameMechs(int boardX, int boardY)
     : boardSizeX(boardX), boardSizeY(boardY), input(0), score(0), exitFlag(false), loseFlag(true)
 {
-    foodPos = new objPos(1,1, '@');
+    foodPos = new objPos(1,1, "@");
 }
 
 // do you need a destructor? 
@@ -105,7 +105,7 @@ void GameMechs::generateFood(objPosArrayList* playerPos)
         }
     }
 
-    foodPos->setObjPos(x, y, '@');
+    foodPos->setObjPos(x, y, "@");
 }
 
 objPos GameMechs::getFoodPos() const
