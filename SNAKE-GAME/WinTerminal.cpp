@@ -16,16 +16,25 @@ void TERMINAL_SOUND(int freq, int dur)
 
 void TERMINAL_SIZE(int height, int width)
 {
-    HWND console = GetConsoleWindow();
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-    SMALL_RECT r;
-    COORD coord;
 
-    coord = {static_cast<SHORT>(width), static_cast<SHORT>(height)};
-    SetConsoleScreenBufferSize(hConsole, coord);
+    // Step 1: Set the screen buffer size
+    COORD bufferSize;
+    bufferSize.X = width;  // Number of columns
+    bufferSize.Y = height;  // Number of rows
+    if (!SetConsoleScreenBufferSize(hConsole, bufferSize)) {
+        std::cerr << "Error: Unable to set screen buffer size." << std::endl;
+    }
 
-    r = {0, 0, static_cast<SHORT>(width - 1), static_cast<SHORT>(height - 1)};
-    SetConsoleWindowInfo(hConsole, TRUE, &r);
+    // Step 2: Set the console window size
+    SMALL_RECT rect;
+    rect.Left = 0;
+    rect.Top = 0;
+    rect.Right = width - 1;
+    rect.Bottom = height - 1;
+    if (!SetConsoleWindowInfo(hConsole, TRUE, &rect)) {
+        std::cerr << "Error: Unable to set console window size." << std::endl;
+    }
 }
 
 void TERMINAL_COLOR(int txt_color, int bg_color)

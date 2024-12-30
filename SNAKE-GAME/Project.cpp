@@ -58,13 +58,9 @@ void CleanUp(void);
 int main(void)
 {
 
-    // system("start cmd /c \"chcp 65001 & Project.exe\"");
-
     SetConsoleOutputCP(CP_UTF8);
 
     TERMINAL_CURSOR_HIDE();
-
-    // TERMINAL_SIZE(BOARD_HEIGHT * 4, BOARD_WIDTH * 4);
 
     // Black Text on White Background
     TERMINAL_COLOR(12, 0);
@@ -219,12 +215,11 @@ void CleanUp(void)
 {
     TERMINAL_CLEAR();
 
-    TERMINAL_COLOR(15, 0);
-
 
     // Display Win/Lose Message
     if (gameMech->getLoseFlagStatus())
     {
+        TERMINAL_COLOR(12, 0);
         TERMINAL_DELAY_SINGLE_LINE_printf("                                                                       .-')      ('-.          \n"      );
         TERMINAL_DELAY_SINGLE_LINE_printf("                                                                      ( OO ).  _(  OO)             \n"  );
         TERMINAL_DELAY_SINGLE_LINE_printf("    ,--.   ,--..-'),-----.  ,--. ,--.          ,--.      .-'),-----. (_)---\\_)(,------.       \n"      );
@@ -237,6 +232,7 @@ void CleanUp(void)
     }
     else
     {
+        TERMINAL_COLOR(10, 0);
         TERMINAL_DELAY_SINGLE_LINE_printf("\n     ____     __   ,-----.      ___    _         .--.      .--..-./`) ,---.   .--.          _ _  .--.     \n"         );
         TERMINAL_DELAY_SINGLE_LINE_printf("     \\   \\   /  /.'  .-,  '.  .'   |  | |        |  |_     |  |\\ .-.')|    \\  |  |         ( ` ) `-. \\    \n"      );
         TERMINAL_DELAY_SINGLE_LINE_printf("      \\  _. /  '/ ,-.|  \\ _ \\ |   .'  | |        | _( )_   |  |/ `-' \\|  ,  \\ |  |        (_ o _)   \\_\\   \n"    );
@@ -247,6 +243,9 @@ void CleanUp(void)
         TERMINAL_DELAY_SINGLE_LINE_printf("   \\      /      '. \\_/``\".'   \\ /  . \\ /        |    /  \\    | |   | |  |    |  |        (_ o _).-' /    \n"     );
         TERMINAL_DELAY_SINGLE_LINE_printf("    `-..-'         '-----'      ``-'`-''         `---'    `---` '---' '--'    '--'         (_,_) `--'     \n"           );
     }
+
+    TERMINAL_COLOR(15, 0);
+
     // De-allocate Heap Memory
     delete playerPtr;
     delete gameMech;
