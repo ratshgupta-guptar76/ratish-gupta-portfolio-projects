@@ -198,8 +198,11 @@ void DrawScreen(void)
             
     }
 
-    TERMINAL_CURSOR_JUMP(gameMech->getFoodPos().getY() * 3, gameMech->getFoodPos().getX() * 2);
-    cout << FOOD_CHAR;
+    for (int i = 0; i < gameMech->getFoodSize(); i++)
+    {
+        TERMINAL_CURSOR_JUMP(gameMech->getFoodPos().getY() * 3, gameMech->getFoodPos().getX() * 2);
+        cout << FOOD_CHAR;
+    }
 
     // Store Previous Head and Tail Positions
     *prevHeadPos = playerPtr->getPlayerPos()->getHeadElement();

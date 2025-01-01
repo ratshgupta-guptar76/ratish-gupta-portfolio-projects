@@ -45,6 +45,7 @@ class GameMechs
         // More methods should be added here
         void generateFood(objPosArrayList* playerPos);
         objPos getFoodPos() const;
+        int getFoodSize() const;
 };
 
 #endif
