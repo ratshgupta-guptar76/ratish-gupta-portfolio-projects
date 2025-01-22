@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS=-I. -g
-OBJ = GameMechs.o objPos.o objPosArrayList.o MacUILib.o Player.o Project.o WinTerminal.o
+OBJ = GameMechs.o objPos.o objPosArrayList.o MacUILib.o Player.o Project.o Terminal.o
 DEPS = *.h
 EXEC = Project
 

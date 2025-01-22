@@ -17,8 +17,8 @@ Player::Player(GameMechs *thisGMRef, int initialLength)
     playerPos = new objPosArrayList();
 
     // Initialize player position to mimic snake body
-    int initialX = 5;
-    int initialY = 5;
+    int initialX = 15;
+    int initialY = 10;
 
     for (int i = 0; i < initialLength; ++i) {
         objPos initialPos(initialX, initialY - i, BODY_SYMBOL);
@@ -42,7 +42,7 @@ bool Player::checkFoodConsumption()
     if (playerPos->getSize() == 0) return false;
 
     objPos head = playerPos->getHeadElement();
-    objPos food = mainGameMechsRef->getFoodPos();
+    objPos food = mainGameMechsRef->getFoodElement();
 
     return food.getX() == head.getX() && food.getY() == head.getY();
 }
@@ -127,6 +127,9 @@ void Player::movePlayer()
         headSymbol = HEAD_SYMBOL_LEFT;
         break;
 
+    case STOP:
+        break;
+ 
     default:
         break;
     }

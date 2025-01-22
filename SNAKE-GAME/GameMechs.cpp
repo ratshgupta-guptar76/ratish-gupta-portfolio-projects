@@ -10,14 +10,14 @@
 GameMechs::GameMechs()
     : boardSizeX(15), boardSizeY(30), input(0), score(0), exitFlag(false), loseFlag(true)
 {
-    foodPos = new objPos[6];
+    foodPos = new objPos[1];
 
-    foodPos[0].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "@");
-    foodPos[1].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "@");
-    foodPos[2].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "@");
-    foodPos[3].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "@");
-    foodPos[4].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "@");
-    foodPos[5].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "@");
+    foodPos[0].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
+    // foodPos[1].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
+    // foodPos[2].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
+    // foodPos[3].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
+    // foodPos[4].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
+    // foodPos[5].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
 
 }
 
@@ -25,14 +25,14 @@ GameMechs::GameMechs()
 GameMechs::GameMechs(int boardX, int boardY)
     : boardSizeX(boardX), boardSizeY(boardY), input(0), score(0), exitFlag(false), loseFlag(true)
 {
-    foodPos = new objPos[6];
+    foodPos = new objPos[1];
 
-    foodPos[0].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "@");
-    foodPos[1].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "@");
-    foodPos[2].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "@");
-    foodPos[3].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "@");
-    foodPos[4].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "@");
-    foodPos[5].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "@");
+    foodPos[0].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
+    // foodPos[1].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
+    // foodPos[2].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
+    // foodPos[3].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
+    // foodPos[4].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
+    // foodPos[5].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
 }
 
 // do you need a destructor? 
@@ -92,7 +92,6 @@ void GameMechs::setInput(char this_input)
     input = this_input;
 }
 
-// Method completed by Ratish - Used for debugging Player class
 void GameMechs::clearInput()
 {
     input = 0;
@@ -120,23 +119,15 @@ void GameMechs::generateFood(objPosArrayList* playerPos)
         }
     }
 
-    foodPos->setObjPos(x, y, "@");
+    foodPos->setObjPos(x, y, "🥚");
 }
 
-objPos GameMechs::getFoodPos() const
+objPos GameMechs::getFoodElement() const
 {
     return foodPos->getObjPos();
 }
 
 int GameMechs::getFoodSize() const
 {
-    return 6;
+    return 1;
 }
-            // for (int j = 0; j < i; j++) {
-            //     for (int k = 0; k < playerSize; k++){
-            //         if (list-i-x == list-j-x && list-i-y == list-j-y) {
-            //             valid = 0;
-            //             break;
-            //         }
-            //     }
-            // }
