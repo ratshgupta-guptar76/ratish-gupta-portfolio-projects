@@ -9,7 +9,7 @@
 
 using namespace std;
 
-#define DELAY_CONST 1000 * 60 // Delay of 1000 microseconds (1 milisecond)
+#define DELAY_CONST 1000 * 30 // Delay of 1000 microseconds (1 milisecond)
 #define BOARD_HEIGHT 50
 #define BOARD_WIDTH 25
 #define START_SIZE 10
@@ -20,6 +20,7 @@ using namespace std;
 #define BORDER_CHAR_BLANK u8"███"
 #define BORDER_CHAR_PATTERN u8"█░█"
 #define BORDER_CHAR_PATTERN_2 u8"░█░"
+#define SNAKE_HEAD_CHAR u8"🐍"
 
 // Global Objects
 Player *playerPtr = nullptr;
@@ -185,6 +186,10 @@ void first_print(void)
         }
     }
 
+    // Print snake head
+    TERMINAL_CURSOR_JUMP(playerPtr->getPlayerPos()->getHeadElement().getY() * 3, playerPtr->getPlayerPos()->getHeadElement().getX() * 2);
+    cout << SNAKE_HEAD_CHAR;
+
     // Only This prints the snakehead initially for one iteration
     // TERMINAL_CURSOR_JUMP(playerPtr->getPlayerPos()->getHeadElement().getY() * 2, playerPtr->getPlayerPos()->getHeadElement().getX() * 3);
     // cout << SNAKE_HEAD_CHAR;
@@ -270,7 +275,7 @@ void DrawScreen(void)
 {
     objPos prevTail = playerPtr->getPlayerPos()->getTailElement(); // Define prevTail
 
-    if (firstRun)
+    if (firstRun /*|| playerPtr->getDir() == Direction::STOP*/)
     {
         first_print();
         firstRun = false;

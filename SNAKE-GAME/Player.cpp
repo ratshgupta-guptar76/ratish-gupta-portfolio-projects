@@ -7,11 +7,10 @@
 #define HEAD_SYMBOL_LEFT u8"🐍"
 #define HEAD_SYMBOL_RIGHT u8"🐍"
 
-
 Player::Player(GameMechs *thisGMRef, int initialLength)
 {
     mainGameMechsRef = thisGMRef;
-    myDir = STOP;
+    myDir = Direction::STOP;
 
     // Initialize playerPos
     playerPos = new objPosArrayList();
@@ -20,7 +19,8 @@ Player::Player(GameMechs *thisGMRef, int initialLength)
     int initialX = 15;
     int initialY = 10;
 
-    for (int i = 0; i < initialLength; ++i) {
+    for (int i = 0; i < initialLength; ++i)
+    {
         objPos initialPos(initialX, initialY - i, BODY_SYMBOL);
         playerPos->insertHead(initialPos);
     }
@@ -32,14 +32,15 @@ Player::~Player()
     delete playerPos;
 }
 
-objPosArrayList* Player::getPlayerPos() const
+objPosArrayList *Player::getPlayerPos() const
 {
     return playerPos;
 }
 
 bool Player::checkFoodConsumption()
 {
-    if (playerPos->getSize() == 0) return false;
+    if (playerPos->getSize() == 0)
+        return false;
 
     objPos head = playerPos->getHeadElement();
     objPos food = mainGameMechsRef->getFoodElement();
@@ -49,8 +50,9 @@ bool Player::checkFoodConsumption()
 
 bool Player::checkSelfCollision()
 {
-    if (myDir == STOP || playerPos->getSize() == 0) return false;
-    
+    if (myDir == Direction::STOP || playerPos->getSize() == 0)
+        return false;
+
     objPos head = playerPos->getHeadElement();
 
     for (int i = 1; i < playerPos->getSize(); i++)
@@ -62,6 +64,11 @@ bool Player::checkSelfCollision()
     return false;
 }
 
+Direction::DIR Player::getDir() const
+{
+    return myDir;
+}
+
 void Player::updatePlayerDir()
 {
     // PPA3 input processing logic
@@ -70,23 +77,23 @@ void Player::updatePlayerDir()
     switch (input)
     {
     case 'w':
-        if (myDir != DOWN)
-            myDir = UP;
+        if (myDir != Direction::DOWN)
+            myDir = Direction::UP;
         break;
 
     case 'a':
-        if (myDir != RIGHT)
-            myDir = LEFT;
+        if (myDir != Direction::RIGHT)
+            myDir = Direction::LEFT;
         break;
 
     case 's':
-        if (myDir != UP)
-            myDir = DOWN;
+        if (myDir != Direction::UP)
+            myDir = Direction::DOWN;
         break;
 
     case 'd':
-        if (myDir != LEFT)
-            myDir = RIGHT;
+        if (myDir != Direction::LEFT)
+            myDir = Direction::RIGHT;
         break;
 
     default:
@@ -96,7 +103,8 @@ void Player::updatePlayerDir()
 
 void Player::movePlayer()
 {
-    if (playerPos->getSize() == 0) return;
+    if (playerPos->getSize() == 0)
+        return;
 
     // PPA3 Finite State Machine logic
     int xPos = playerPos->getHeadElement().getX();
@@ -107,29 +115,29 @@ void Player::movePlayer()
 
     switch (myDir)
     {
-    case UP:
+    case Direction::UP:
         xPos -= 1;
         headSymbol = HEAD_SYMBOL_UP;
         break;
 
-    case RIGHT:
+    case Direction::RIGHT:
         yPos += 1;
         headSymbol = HEAD_SYMBOL_RIGHT;
         break;
 
-    case DOWN:
+    case Direction::DOWN:
         xPos += 1;
         headSymbol = HEAD_SYMBOL_DOWN;
         break;
 
-    case LEFT:
+    case Direction::LEFT:
         yPos -= 1;
         headSymbol = HEAD_SYMBOL_LEFT;
         break;
 
-    case STOP:
+    case Direction::STOP:
         break;
- 
+
     default:
         break;
     }
@@ -154,7 +162,7 @@ void Player::movePlayer()
     }
 
     playerPos->makeHeadBody(BODY_SYMBOL);
-    
+
     objPos newHead;
     newHead.setObjPos(xPos, yPos, headSymbol);
 
