@@ -1,18 +1,16 @@
-#include <windows.h>
-#include "WinTerminal.h"
+#include "Terminal.h"
 
-// #################################################################
+#ifdef WINDOWS
+#include <windows.h>
 // ####################   TERMINAL SOUND   #########################
-// #################################################################
 
 void TERMINAL_SOUND(int freq, int dur)
 {
     Beep(freq, dur);
 }
 
-// #################################################################
+
 // ####################   TERMINAL APPEARANCE   ####################
-// #################################################################
 
 void TERMINAL_SIZE(int height, int width)
 {
@@ -21,8 +19,9 @@ void TERMINAL_SIZE(int height, int width)
     // Step 1: Set the screen buffer size
     COORD bufferSize;
     bufferSize.X = width;  // Number of columns
-    bufferSize.Y = height;  // Number of rows
-    if (!SetConsoleScreenBufferSize(hConsole, bufferSize)) {
+    bufferSize.Y = height; // Number of rows
+    if (!SetConsoleScreenBufferSize(hConsole, bufferSize))
+    {
         std::cerr << "Error: Unable to set screen buffer size." << std::endl;
     }
 
@@ -32,7 +31,8 @@ void TERMINAL_SIZE(int height, int width)
     rect.Top = 0;
     rect.Right = width - 1;
     rect.Bottom = height - 1;
-    if (!SetConsoleWindowInfo(hConsole, TRUE, &rect)) {
+    if (!SetConsoleWindowInfo(hConsole, TRUE, &rect))
+    {
         std::cerr << "Error: Unable to set console window size." << std::endl;
     }
 }
@@ -59,12 +59,11 @@ void TERMINAL_DELAY_SINGLE_LINE_printf(std::string str, int time)
         }
         printf("%c", str[i]);
         Sleep(time);
-    }    
+    }
 }
 
-// #################################################################
+
 // #################   TERMINAL CURSOR POSITION   ##################
-// #################################################################
 
 void TERMINAL_CURSOR_JUMP(int x, int y)
 {
@@ -84,21 +83,21 @@ void TERMINAL_CURSOR_HIDE()
     SetConsoleCursorInfo(console, &cursor);
 }
 
-// #################################################################
+
 // ####################   TERMINAL CLOSE   #########################
-// #################################################################
+
 void TERMINAL_CLEAR()
 {
-    HANDLE console=GetStdHandle(STD_OUTPUT_HANDLE);
-    COORD topLeft={0,0};    
+    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD topLeft = {0, 0};
     CONSOLE_SCREEN_BUFFER_INFO screen;
     DWORD written;
 
-    GetConsoleScreenBufferInfo(console,&screen);
-    FillConsoleOutputCharacterA(console,' ',screen.dwSize.X * screen.dwSize.Y, topLeft, &written);
+    GetConsoleScreenBufferInfo(console, &screen);
+    FillConsoleOutputCharacterA(console, ' ', screen.dwSize.X * screen.dwSize.Y, topLeft, &written);
     FillConsoleOutputAttribute(console, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE,
-                               screen.dwSize.X * screen.dwSize.Y, topLeft,&written);
-    SetConsoleCursorPosition(console,topLeft);
+                               screen.dwSize.X * screen.dwSize.Y, topLeft, &written);
+    SetConsoleCursorPosition(console, topLeft);
 }
 
 void TERMINAL_EXIT()
@@ -107,3 +106,57 @@ void TERMINAL_EXIT()
     TERMINAL_CURSOR_JUMP(0, 0);
     exit(0);
 }
+
+#endif // WINDOWS
+
+#ifdef POSIX
+
+// ####################   TERMINAL SOUND   #########################
+
+void TERMINAL_SOUND(int freq, int dur)
+{
+    // Not implemented
+}
+
+// ####################   TERMINAL APPEARANCE   ####################
+
+void TERMINAL_SIZE(int height, int width)
+{
+    // Not implemented
+}
+
+void TERMINAL_COLOR(int txt_color, int bg_color)
+{
+    // Not implemented
+}
+
+void TERMINAL_DELAY_SINGLE_LINE_printf(std::string str, int time)
+{
+    // Not implemented
+}
+
+// #################   TERMINAL CURSOR POSITION   ##################
+
+void TERMINAL_CURSOR_JUMP(int x, int y)
+{
+    // Not implemented
+}
+
+void TERMINAL_CURSOR_HIDE()
+{
+    // Not implemented
+}
+
+// ####################   TERMINAL CLOSE   #########################
+
+void TERMINAL_CLEAR()
+{
+    // Not implemented
+}
+
+void TERMINAL_EXIT()
+{
+    // Not implemented
+}
+
+#endif // POSIX

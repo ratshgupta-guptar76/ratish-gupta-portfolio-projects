@@ -55,7 +55,8 @@ void objPosArrayList::removeTail() {
     if (head == tail) {
         delete head;
         head = tail = nullptr;
-    } else {
+    }
+    else {
         Node* current = head;
         while (current->next != tail) {
             current = current->next;

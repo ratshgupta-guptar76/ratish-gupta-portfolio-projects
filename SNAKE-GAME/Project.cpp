@@ -3,17 +3,18 @@
 #include "objPos.h"
 #include "Player.h"
 #include <iomanip>
+#include <chrono>
 
 // Make it so that every 10 steps reduces 1 point, and 1 snake length
 // Graph Vortex
 
 using namespace std;
 
-#define DELAY_CONST 1000 * 30 // Delay of 1000 microseconds (1 milisecond)
+#define DELAY_CONST 1000 * 100 // Delay of 1000 microseconds (1 milisecond)
 #define BOARD_HEIGHT 50
-#define BOARD_WIDTH 25
+#define BOARD_WIDTH 20
 #define START_SIZE 10
-#define MAX_SCORE 100
+#define MAX_SCORE 10
 
 #define SPACE_CHAR u8"   "
 #define EMPTY_CHAR u8" • "
@@ -46,6 +47,10 @@ int j;
 int HEIGHT;
 int WIDTH;
 int OBJ_SIZE;
+
+// Time Variables
+chrono::time_point<chrono::high_resolution_clock> startTime, endTime, logicRunTime, printRunTime; // Create two time points
+chrono::duration<float, milli> del_t, logic_t, print_t;
 
 // Dummy Functions
 int CountDigits(int num)
@@ -80,10 +85,12 @@ int main(void)
 
     while (gameMech->getExitFlagStatus() == false)
     {
+
         GetInput();
         RunLogic();
         DrawScreen();
         LoopDelay();
+
     }
 
     CleanUp();
@@ -140,6 +147,7 @@ void GetInput(void)
 
 void RunLogic(void)
 {
+    startTime = chrono::high_resolution_clock::now();
     input = gameMech->getInput();
 
     if (input == 32)
@@ -160,6 +168,8 @@ void RunLogic(void)
     {
         gameMech->setExitTrue();
     }
+
+    logicRunTime = chrono::high_resolution_clock::now();
 }
 
 // ================================================================================
@@ -273,6 +283,7 @@ void store_prev_pos(void)
 // ================================================================================
 void DrawScreen(void)
 {
+    printRunTime = chrono::high_resolution_clock::now();
     objPos prevTail = playerPtr->getPlayerPos()->getTailElement(); // Define prevTail
 
     if (firstRun /*|| playerPtr->getDir() == Direction::STOP*/)
@@ -291,7 +302,20 @@ void DrawScreen(void)
     print_food();
 
     store_prev_pos();
+    
 
+    // Processing Time Calculation
+    endTime = chrono::high_resolution_clock::now();
+    del_t = endTime - startTime;
+    logic_t = logicRunTime - startTime;
+    print_t = endTime - printRunTime;
+
+    TERMINAL_CURSOR_JUMP(0 , (HEIGHT + 1) * 2);
+    cout << "Total Time: " << del_t.count() << "ms" << endl;
+    cout << "Logic Time: " << logic_t.count() << "ms" << endl;
+    cout << "Print Time: " << print_t.count() << "ms" << endl;
+
+    cout << "Score: " << gameMech->getScore() << " / " << MAX_SCORE << " ";
     return;
 }
 

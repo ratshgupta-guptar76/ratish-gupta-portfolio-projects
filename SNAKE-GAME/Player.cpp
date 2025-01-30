@@ -16,8 +16,8 @@ Player::Player(GameMechs *thisGMRef, int initialLength)
     playerPos = new objPosArrayList();
 
     // Initialize player position to mimic snake body
-    int initialX = 15;
-    int initialY = 10;
+    int initialX = rand() % (mainGameMechsRef->getBoardSizeX() - 2) + 1;
+    int initialY = rand() % (mainGameMechsRef->getBoardSizeY() - 2) + 1;
 
     for (int i = 0; i < initialLength; ++i)
     {

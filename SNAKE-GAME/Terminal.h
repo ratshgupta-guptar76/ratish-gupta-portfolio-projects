@@ -18,7 +18,7 @@ void TERMINAL_SIZE(int height, int width);
 void TERMINAL_COLOR(int txt_color, int bg_color);
 
 // TERMINAL CURSOR POSITION
-void TERMINAL_DELAY_SINGLE_LINE_printf(std::string str, int time = 0);
+void TERMINAL_DELAY_SINGLE_LINE_printf(std::string str, int time = 1);
 
 void TERMINAL_CURSOR_JUMP(int x, int y);
 
