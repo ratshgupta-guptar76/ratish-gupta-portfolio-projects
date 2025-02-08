@@ -1,90 +1,45 @@
 #include "objPosArrayList.h"
-#include <stdexcept>
 
-objPosArrayList::objPosArrayList() {
-    head = nullptr;
-    tail = nullptr;
-    listSize = 0;
-}
+objPosArrayList::objPosArrayList() { }
 
-objPosArrayList::~objPosArrayList() {
-    Node* current = head;
-    while (current != nullptr) {
-        Node* next = current->next;
-        delete current;
-        current = next;
-    }
-}
+objPosArrayList::~objPosArrayList() { }
 
 int objPosArrayList::getSize() const {
-    return listSize;
+    return objLL.size();
 }
 
 void objPosArrayList::insertHead(objPos thisPos) {
-    Node* newNode = new Node{thisPos, head};
-    head = newNode;
-    if (tail == nullptr) {
-        tail = head;
-    }
-    listSize++;
+    objLL.addFirst(thisPos);
 }
 
 void objPosArrayList::insertTail(objPos thisPos) {
-    Node* newNode = new Node{thisPos, nullptr};
-    if (tail != nullptr) {
-        tail->next = newNode;
-    }
-    tail = newNode;
-    if (head == nullptr) {
-        head = tail;
-    }
-    listSize++;
+    objLL.addLast(thisPos);
 }
 
 void objPosArrayList::removeHead() {
-    Node* temp = head;
-    head = head->next;
-    delete temp;
-    listSize--;
-    if (head == nullptr) {
-        tail = nullptr;
-    }
+    objLL.removeFirst();
 }
 
 void objPosArrayList::removeTail() {
-    if (head == tail) {
-        delete head;
-        head = tail = nullptr;
-    }
-    else {
-        Node* current = head;
-        while (current->next != tail) {
-            current = current->next;
-        }
-        delete tail;
-        tail = current;
-        tail->next = nullptr;
-    }
-    listSize--;
-}
-
-void objPosArrayList::makeHeadBody(string sym) {
-    head->OBJ.setObjPos(head->OBJ.getX(), head->OBJ.getY(), sym);
+    objLL.removeLast();
 }
 
 objPos objPosArrayList::getHeadElement() const {
-    return head->OBJ;
+    return objLL.at(0);
 }
 
 objPos objPosArrayList::getTailElement() const {
-    return tail->OBJ;
+    return objLL.at(objLL.size() - 1);
 }
 
 objPos objPosArrayList::getElement(int index) const {
-    Node* current = head;
-    for (int i = 0; i < index; i++) {
-        current = current->next;
-    }
-    return current->OBJ;
+    return objLL.at(index);
 }
 
+void objPosArrayList::makeHeadBody(string sym) {
+    if (objLL.size() > 0) {
+        objPos head = objLL.at(0);
+        head.setSymbol(sym);
+        objLL.set(0, head);
+    }
+}

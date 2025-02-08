@@ -59,6 +59,10 @@ void objPos::setObjPos(int xPos, int yPos, string sym)
     symbol = sym;
 }
 
+void objPos::setSymbol(const std::string &sym) {
+    symbol = sym;
+}
+
 objPos objPos::getObjPos() const
 {
     objPos returnPos;

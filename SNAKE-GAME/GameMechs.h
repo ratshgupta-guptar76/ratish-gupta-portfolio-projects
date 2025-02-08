@@ -2,10 +2,12 @@
 #define GAMEMECHS_H
 
 #include <cstdlib>
-#include <time.h>
-#include <conio.h>
+#include <termios.h>
+#include <ctime>
+#include <iostream>
 #include "objPos.h"
 #include "objPosArrayList.h"
+
 
 using namespace std;
 
@@ -20,7 +22,7 @@ class GameMechs
         int boardSizeX;
         int boardSizeY;
 
-        objPos* foodPos;
+        objPos foodPos;
 
     public:
         GameMechs();

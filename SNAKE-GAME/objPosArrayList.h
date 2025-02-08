@@ -2,17 +2,13 @@
 #define OBJPOS_ARRAYLIST_H
 
 #include "objPos.h"
+#include "List.h"
+#include <stdexcept>
 
 class objPosArrayList
 {
     private:
-        struct Node {
-            objPos OBJ;
-            Node* next;
-        };
-        Node* head;
-        Node* tail;
-        int listSize;
+        list<objPos> objLL;
 
     public:
         objPosArrayList();

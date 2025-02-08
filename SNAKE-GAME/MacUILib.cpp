@@ -49,66 +49,66 @@ print_ptr MacUILib_printf;
 #endif
 
 	
-// #ifdef POSIX
+#ifdef POSIX
 
-// 	#include <ncurses.h>
-// 	#include <unistd.h>
+	#include <ncurses.h>
+	#include <unistd.h>
 	
-// 	void MacUILib_init(void)
-// 	{
-// 		MacUILib_printf = &printw;
+	void MacUILib_init(void)
+	{
+		MacUILib_printf = &printw;
 		
-// 		initscr();
-// 		noecho();
-// 		cbreak();
-// 		nodelay(stdscr, TRUE);
-// 		curs_set(0);
-// 	}
+		initscr();
+		noecho();
+		cbreak();
+		nodelay(stdscr, TRUE);
+		curs_set(0);
+	}
 
-// 	void MacUILib_init_sync(void)
-// 	{
-// 		MacUILib_printf = &printw;
+	void MacUILib_init_sync(void)
+	{
+		MacUILib_printf = &printw;
 		
-// 		initscr();
-// 		noecho();
-// 		curs_set(0);
-// 	}
+		initscr();
+		noecho();
+		curs_set(0);
+	}
 
-// 	void MacUILib_Delay(int usec)
-// 	{
-// 		refresh();
-// 		usleep(usec);
-// 	}
+	void MacUILib_Delay(int usec)
+	{
+		refresh();
+		usleep(usec);
+	}
 
-// 	int MacUILib_hasChar()
-// 	{
-// 		char ch = getch();
-// 		if(ch == ERR)
-// 			return 0;
-// 		else
-// 		{
-// 			ungetch(ch);
-// 			return 1;
-// 		}		
-// 	}
+	int MacUILib_hasChar()
+	{
+		char ch = getch();
+		if(ch == ERR)
+			return 0;
+		else
+		{
+			ungetch(ch);
+			return 1;
+		}		
+	}
 
-// 	char MacUILib_getChar(void)
-// 	{
-// 		return getch();
-// 	}
+	char MacUILib_getChar(void)
+	{
+		return getch();
+	}
 
-// 	void MacUILib_clearScreen(void)
-// 	{
-// 		clear();
-// 	}
+	void MacUILib_clearScreen(void)
+	{
+		clear();
+	}
 
-// 	void MacUILib_uninit(void)
-// 	{
-// 		//clear();
-// 		MacUILib_printf("\nPress ENTER to Shut Down\n");
-// 		refresh();
-// 		getchar();
-// 		endwin();
-// 	}
+	void MacUILib_uninit(void)
+	{
+		//clear();
+		MacUILib_printf("\nPress ENTER to Shut Down\n");
+		refresh();
+		getchar();
+		endwin();
+	}
 
-// #endif
+#endif

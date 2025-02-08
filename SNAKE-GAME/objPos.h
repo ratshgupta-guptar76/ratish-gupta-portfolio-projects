@@ -40,6 +40,7 @@ class objPos
         string getSymbolIfPosEqual(const objPos* refPos) const;
         
         bool isPosEqual(const objPos* refPos) const;
+        void setSymbol(const std::string &sym);
 };
 
 #endif

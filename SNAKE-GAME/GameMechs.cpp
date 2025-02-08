@@ -1,6 +1,5 @@
 #include "GameMechs.h"
-#include <ctime>
-#include <iostream>
+
 // ###########################################################################################
 //      Object Completed by Ratish - Used for debugging Player class
 // ###########################################################################################
@@ -10,9 +9,7 @@
 GameMechs::GameMechs()
     : boardSizeX(15), boardSizeY(30), input(0), score(0), exitFlag(false), loseFlag(true)
 {
-    foodPos = new objPos[1];
-
-    foodPos[0].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
+    foodPos.setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
     // foodPos[1].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
     // foodPos[2].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
     // foodPos[3].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
@@ -25,9 +22,7 @@ GameMechs::GameMechs()
 GameMechs::GameMechs(int boardX, int boardY)
     : boardSizeX(boardX), boardSizeY(boardY), input(0), score(0), exitFlag(false), loseFlag(true)
 {
-    foodPos = new objPos[1];
-
-    foodPos[0].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
+    foodPos.setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
     // foodPos[1].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
     // foodPos[2].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
     // foodPos[3].setObjPos(rand() % (boardSizeX - 2) + 1, rand() % (boardSizeY - 2) + 1, "🥚");
@@ -36,10 +31,7 @@ GameMechs::GameMechs(int boardX, int boardY)
 }
 
 // do you need a destructor? 
-GameMechs::~GameMechs()
-{
-    delete foodPos;
-}
+GameMechs::~GameMechs() { }
 
 bool GameMechs::getExitFlagStatus() const
 {
@@ -119,12 +111,12 @@ void GameMechs::generateFood(objPosArrayList* playerPos)
         }
     }
 
-    foodPos->setObjPos(x, y, "🥚");
+    foodPos.setObjPos(x, y, "🥚");
 }
 
 objPos GameMechs::getFoodElement() const
 {
-    return foodPos->getObjPos();
+    return foodPos;
 }
 
 int GameMechs::getFoodSize() const

@@ -1,13 +1,16 @@
-#ifndef WINTERMINAL_H
-#define WINTERMINAL_H
+#ifndef TERMINAL_H
+#define TERMINAL_H
 
 #include <iostream>
-#include <windows.h>
 #include <string>
-#include <conio.h>
 #include <time.h>
 
-#pragma comment(lib, "Winmm.lib")
+// #pragma comment(lib, "Winmm.lib")
+
+// TERMINAL I/O
+int TERMINAL_CHECK_INPUT(void);
+
+char TERMINAL_GET_INPUT(void);
 
 // TERMINAL AUDIO
 void TERMINAL_SOUND(int freq, int dur);

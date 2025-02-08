@@ -2,15 +2,20 @@
 #include "Terminal.h"
 #include "objPos.h"
 #include "Player.h"
+#include <locale.h>
 #include <iomanip>
 #include <chrono>
+#include <unistd.h>
+#include <termios.h>
+#include <stdio.h>
+#include <fcntl.h>
 
 // Make it so that every 10 steps reduces 1 point, and 1 snake length
 // Graph Vortex
 
 using namespace std;
 
-#define DELAY_CONST 1000 * 100 // Delay of 1000 microseconds (1 milisecond)
+#define DELAY_CONST 100000 // Delay of 1000 microseconds (1 milisecond)
 #define BOARD_HEIGHT 50
 #define BOARD_WIDTH 20
 #define START_SIZE 10
@@ -74,7 +79,7 @@ void CleanUp(void);
 
 int main(void)
 {
-    SetConsoleOutputCP(CP_UTF8);
+    setlocale(LC_ALL, "en_US.UTF-8");
 
     TERMINAL_CURSOR_HIDE();
 
@@ -125,9 +130,9 @@ void Initialize(void)
 
 void GetInput(void)
 {
-    if (_kbhit())
+    if (TERMINAL_CHECK_INPUT())
     {
-        gameMech->setInput(_getch()); // Get Input
+        gameMech->setInput(TERMINAL_GET_INPUT()); // Get Input
         // Increase snake size to 10 on first key press
         if (gameMech->getInput() == 'w' || gameMech->getInput() == 'a' || gameMech->getInput() == 's' || gameMech->getInput() == 'd')
             if (playerPtr->getPlayerPos()->getSize() == 1)
@@ -321,7 +326,7 @@ void DrawScreen(void)
 
 void LoopDelay(void)
 {
-    MacUILib_Delay(DELAY_CONST); // 0.1s delay
+    usleep(static_cast<int>(DELAY_CONST)); // 0.1s delay
 }
 
 void CleanUp(void)
