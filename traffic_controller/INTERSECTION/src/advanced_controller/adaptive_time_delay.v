@@ -6,11 +6,11 @@ module adaptive_time_delay #(
     input       clk,
     input       rst,
 
-    input       ns_sensor,
-    input       ew_sensor,
+    input       NS_SENSOR,
+    input       EW_SENSOR,
 
-    output reg [31:0]   ns_green_delay,
-    output reg [31:0]   ew_green_delay
+    output reg [31:0]   NS_GREEN_DELAY,
+    output reg [31:0]   EW_GREEN_DELAY
 );
 
     // Defining BASE ClOCK CYCLES for GREEN phase (200ms)
@@ -23,19 +23,19 @@ module adaptive_time_delay #(
     always @(posedge clk or posedge rst) begin
 
         if (rst) begin
-            ns_green_delay  <=  BASE_GREEN_CYCLES;
-            ew_green_delay  <=  BASE_GREEN_CYCLES;
+            NS_GREEN_DELAY  <=  BASE_GREEN_CYCLES;
+            EW_GREEN_DELAY  <=  BASE_GREEN_CYCLES;
         end
         else begin
-            if (ns_sensor)
-                ns_green_delay      =       BASE_GREEN_CYCLES * FACTOR_NUMER / FACTOR_DENOM;
+            if (NS_SENSOR)
+                NS_GREEN_DELAY      =       BASE_GREEN_CYCLES * FACTOR_NUMER / FACTOR_DENOM;
             else
-                ns_green_delay      =       BASE_GREEN_CYCLES;
+                NS_GREEN_DELAY      =       BASE_GREEN_CYCLES;
         // ----
-            if (ew_sensor)
-                ew_green_delay      =       BASE_GREEN_CYCLES * FACTOR_NUMER / FACTOR_DENOM;
+            if (EW_SENSOR)
+                EW_GREEN_DELAY      =       BASE_GREEN_CYCLES * FACTOR_NUMER / FACTOR_DENOM;
             else
-                ew_green_delay      =       BASE_GREEN_CYCLES;
+                EW_GREEN_DELAY      =       BASE_GREEN_CYCLES;
         end        
 
     end

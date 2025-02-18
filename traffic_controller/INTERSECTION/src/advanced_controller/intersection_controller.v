@@ -1,112 +1,133 @@
+`define ON  1'b1
+`define OFF 1'b0
+
 module intersection_controller (
-  input         clk,
-  input         rst,
-  // Traffic sensor inputs for adaptive timing
-  input         ns_sensor,
-  input         sensor_EW,
-  // Pedestrian request buttons
-  input         pd_button_ew,
-  input         pd_button_ns,
+  input clk,                                // Clock signal
+  input rst,                                // Reset signal
 
-  // Traffic light outputs for vehicles
-  output        NS_red,
-  output        NS_yellow,
-  output        NS_green,
-  output        EW_red,
-  output        EW_yellow,
-  output        EW_green,
-  // Pedestrian crossing signals
-  output        pd_FREE_NS,
-  output        pd_Caution_NS,
-  output        pd_FREE_EW,
-  output        pd_Caution_EW,
-  output        pd_button_NS,
+    // Vehicle and pedestrian inputs
+  input ns_sensor,                          // North-South vehicle sensor
+  input ew_sensor,                          // East-West vehicle sensor
+  input pd_button_ns,                       // North-South pedestrian button
+  input pd_button_ew,                       // East-West pedestrian button
 
-  // Pedestrian Timer Display
-  output [31:0] LCD_input
+    // Vehicle light outputs
+  output NS_RED,                            // North-South red light
+  output NS_YELLOW,                         // North-South yellow light
+  output NS_GREEN,                          // North-South green light
+  output EW_RED,                            // East-West red light
+  output EW_YELLOW,                         // East-West yellow light
+  output EW_GREEN,                          // East-West green light
+
+    // Pedestrian light outputs
+  output pd_FREE_NS,                        // North-South pedestrian free walk
+  output pd_CAUTION_NS,                     // North-South pedestrian caution
+  output pd_FREE_EW,                        // East-West pedestrian free walk
+  output pd_CAUTION_EW,                     // East-West pedestrian caution
+
+    // Pedestrian timer outputs
+  output [31:0] time_left_ms_ns,            // Time left for North-South pedestrian
+  output [31:0] time_left_ms_ew             // Time left for East-West pedestrian
 );
 
-    parameter CLOCK_FREQUENCY = 50_000_000; // 50 MHz
-    parameter BASE_GREEN_TIME = 30; // 30 seconds
-    parameter FREE_WALK_PERCENT = 50; // 50% of the green time
-    parameter YELLOW_DELAY_TIME = 5; // 5 seconds
+// Local parameters for configuration
+    localparam CLK_FREQ = 50_000_000;         // Clock frequency in Hz
+    localparam BASE_TIME_DELAY = 200;         // Base delay for green light (ms)
+    localparam YELLOW_DELAY_TIME = 40;        // Delay for yellow light (ms)
+    localparam FREE_WALK_PERCENT = 70;        // Percentage of green time for pedestrian free walk
 
-    wire [31:0]  NS_GREEN_DELAY,
-                 EW_GREEN_DELAY;
+    // Internal signals
+    wire [31:0] ns_green_delay;               // Dynamic green delay for North-South
+    wire [31:0] ew_green_delay;               // Dynamic green delay for East-West
 
-    wire [31:0]  PEDESTRIAN_TOTAL_CYCLES_NS,
-                 PEDESTRIAN_FREE_CYCLE_NS,
-                 NS_COUNTER_VALUE,
-                 PEDESTRIAN_TOTAL_CYCLES_EW,
-                 PEDESTRIAN_FREE_CYCLE_EW,
-                 EW_COUNTER_VALUE;
-
-// DYNAMIC GREEN TIME DELAY CALCULATOR
+// Adaptive Time Delay Instantiation
     adaptive_time_delay #(
-        .CLK_FREQ(CLOCK_FREQUENCY),
-        .BASE_TIME_DELAY(BASE_GREEN_TIME)
-    ) DYNAMIC_TIMER (
+        .CLK_FREQ(CLK_FREQ),
+        .BASE_TIME_DELAY(BASE_TIME_DELAY)
+    ) DYNAMIC_DELAY_CALCULATOR (
         .clk(clk),
         .rst(rst),
-        .ns_sensor(ns_sensor),
-        .ew_sensor(sensor_EW),
-        .ns_green_delay(NS_GREEN_DELAY),
-        .ew_green_delay(EW_GREEN_DELAY)
+        .NS_SENSOR(ns_sensor),
+        .EW_SENSOR(ew_sensor),
+        .NS_GREEN_DELAY(ns_green_delay),
+        .EW_GREEN_DELAY(ew_green_delay)
     );
 
-// PEDESTRIAN CROSSING CONTROLLER
+// Base Traffic Controller Instantiation
+    base_fsm #(
+        .YELLOW_DELAY_TIME(YELLOW_DELAY_TIME),
+        .CLK_FREQ(CLK_FREQ)
+    ) TRAFFIC_LIGHT_CONTROLLER (
+        .clk(clk),
+        .rst(rst),
+        .NS_GREEN_DELAY(ns_green_delay),
+        .EW_GREEN_DELAY(ew_green_delay),
+        .NS_RED(NS_RED),
+        .NS_YELLOW(NS_YELLOW),
+        .NS_GREEN(NS_GREEN),
+        .EW_RED(EW_RED),
+        .EW_YELLOW(EW_YELLOW),
+        .EW_GREEN(EW_GREEN)
+    );
+
+// Pedestrian Light Controller
+    // Internal Signals for Pedestrian Light Controller
+    wire [31:0] pd_total_cycles_ns;           // Total cycles for North-South pedestrian
+    wire [31:0] pd_free_cycles_ns;            // Free walk cycles for North-South
+    wire [31:0] pd_total_cycles_ew;           // Total cycles for East-West pedestrian
+    wire [31:0] pd_free_cycles_ew;            // Free walk cycles for East-West
+    wire [31:0] pd_current_counter_ns;        // Current counter for North-South pedestrian
+    wire [31:0] pd_current_counter_ew;        // Current counter for East-West pedestrian
+
+    // Pedestrian Light Controller Instantiation
     pedestrian_light_controller #(
-        .CLK_FREQ(CLOCK_FREQUENCY),
+        .CLK_FREQ(CLK_FREQ),
         .FREE_WALK_PERCENT(FREE_WALK_PERCENT)
-    ) PEDESTRIAN_CROSSING_LIGHT_CONTROLLER (
+    ) PEDESTRIAN_LIGHT_CONTROLLER (
         .clk(clk),
         .rst(rst),
         .pd_button_ns(pd_button_ns),
         .pd_button_ew(pd_button_ew),
-        .ns_green_delay(NS_GREEN_DELAY),
-        .ew_green_delay(EW_GREEN_DELAY),
-        .NS_RED(NS_red),
-        .EW_RED(EW_red),
+        .ns_green_delay(ns_green_delay),
+        .ew_green_delay(ew_green_delay),
+        .NS_RED(NS_RED),
+        .EW_RED(EW_RED),
         .pd_FREE_NS(pd_FREE_NS),
-        .pd_CAUTION_NS(pd_Caution_NS),
+        .pd_CAUTION_NS(pd_CAUTION_NS),
         .pd_FREE_EW(pd_FREE_EW),
-        .pd_CAUTION_EW(pd_Caution_EW),
-        .pd_total_cycles_ns(PEDESTRIAN_TOTAL_CYCLES_NS),
-        .pd_free_cycles_ns(PEDESTRIAN_FREE_CYCLE_NS),
-        .pd_current_counter_ns(NS_COUNTER_VALUE),
-        .pd_total_cycles_ew(PEDESTRIAN_TOTAL_CYCLES_EW),
-        .pd_free_cycles_ew(PEDESTRIAN_FREE_CYCLE_EW),
-        .pd_current_counter_ew(EW_COUNTER_VALUE)
+        .pd_CAUTION_EW(pd_CAUTION_EW),
+        .pd_total_cycles_ns(pd_total_cycles_ns),
+        .pd_free_cycles_ns(pd_free_cycles_ns),
+        .pd_total_cycles_ew(pd_total_cycles_ew),
+        .pd_free_cycles_ew(pd_free_cycles_ew),
+        .pd_current_counter_ns(pd_current_counter_ns),
+        .pd_current_counter_ew(pd_current_counter_ew)
     );
 
-// PEDESTRIAN CLOCK DISPLAY INPUT: NORTH-SOUTH
+    // Pedestrian Timer Display Instantiation
     pedestrian_timer_display #(
-        .CLK_FREQ(CLOCK_FREQUENCY)
-    ) PEDESTRIAN_TIMER_DISPLAY_NS (
+        .CLK_FREQ(CLK_FREQ)
+    ) LCD_TIMER_DISPLAY_NS (
         .clk(clk),
         .rst(rst),
-        .pd_caution(pd_Caution_NS),
-        .pd_counter(NS_COUNTER_VALUE),
-        .pd_total_cycles(PEDESTRIAN_TOTAL_CYCLES_NS),
-        .pd_free_cycles(PEDESTRIAN_FREE_CYCLE_NS),
-        .time_left_ms(LCD_input)
+        .pd_caution(pd_CAUTION_NS),
+        .pd_counter(pd_current_counter_ns),
+        .pd_total_cycles(pd_total_cycles_ns),
+        .pd_free_cycles(pd_free_cycles_ns),
+        .time_left_ms(time_left_ms_ns)
     );
 
-// BASE TRAFFIC LIGHT FSM CONTROLLER
-    base_fsm #(
-        .CLK_FREQ(CLOCK_FREQUENCY),
-        .YELLOW_DELAY_TIME(YELLOW_DELAY_TIME)
-    ) TRAFFIC_LIGHT_CONTROLLER (
+    // Pedestrian Timer Display Instantiation
+    pedestrian_timer_display #(
+        .CLK_FREQ(CLK_FREQ)
+    ) LCD_TIMER_DISPLAY_EW (
         .clk(clk),
         .rst(rst),
-        .ns_green_delay(NS_GREEN_DELAY),
-        .ew_green_delay(EW_GREEN_DELAY),
-        .NS_GREEN(NS_green),
-        .NS_YELLOW(NS_yellow),
-        .NS_RED(NS_red),
-        .EW_GREEN(EW_green),
-        .EW_YELLOW(EW_yellow),
-        .EW_RED(EW_red)
+        .pd_caution(pd_CAUTION_EW),
+        .pd_counter(pd_current_counter_ew),
+        .pd_total_cycles(pd_total_cycles_ew),
+        .pd_free_cycles(pd_free_cycles_ew),
+        .time_left_ms(time_left_ms_ew)
     );
 
 endmodule

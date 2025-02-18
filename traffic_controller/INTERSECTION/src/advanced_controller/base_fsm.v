@@ -3,14 +3,14 @@
 `define OFF 1'b0 
 
 module base_fsm #(
-    parameter YELLOW_DELAY_TIME = 40,
-    parameter CLK_FREQ = 50_000_000
+    parameter CLK_FREQ = 50_000_000,
+    parameter YELLOW_DELAY_TIME = 40
 )(
     input       clk,
     input       rst,
     
-    input [31:0] ns_green_delay,    // dynamic time duration of NS_GREEN state
-    input [31:0] ew_green_delay,    // dynamic time duration of EW_GREEN state
+    input [31:0] NS_GREEN_DELAY,    // dynamic time duration of NS_GREEN state
+    input [31:0] EW_GREEN_DELAY,    // dynamic time duration of EW_GREEN state
 
     output reg  NS_RED,
     output reg  NS_YELLOW,
@@ -46,7 +46,7 @@ module base_fsm #(
             case (state)
 
                 NS_GREEN_ST: begin
-                    if (counter >= ns_green_delay - 1) begin
+                    if (counter >= NS_GREEN_DELAY - 1) begin
                         state   <=  NS_YELLOW_ST;
                         counter <=  32'd0;
                     end
@@ -60,7 +60,7 @@ module base_fsm #(
                 end
 
                 EW_GREEN_ST: begin
-                    if (counter >= ew_green_delay) begin
+                    if (counter >= EW_GREEN_DELAY) begin
                         state   <=  EW_YELLOW_ST;
                         counter <=  32'd0;
                     end
