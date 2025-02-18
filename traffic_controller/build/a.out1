@@ -1,0 +1,20 @@
+**** module/scope: pedestrian_timer_display
+     Flip-Flops   : 32
+     Logic Gates  : 257
+     MAGNITUDE[32]: 2 units
+     MUX[2]: 64 slices
+     LPM[4]: 1 unaccounted
+     LPM[8]: 1 unaccounted
+     LPM[12]: 1 unaccounted
+     LOG[13]: 1 unaccounted
+     LOG[14]: 1 unaccounted
+**** TOTALS
+     Flip-Flops   : 32
+     Logic Gates  : 257
+     MAGNITUDE[32]: 2 units
+     MUX[2]: 64 slices
+     LPM[4]: 1 unaccounted
+     LPM[8]: 1 unaccounted
+     LPM[12]: 1 unaccounted
+     LOG[13]: 1 unaccounted
+     LOG[14]: 1 unaccounted

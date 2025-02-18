@@ -1,0 +1,5 @@
+What I learnt in this project:
+1. timescale <time_unit>/<time_precision>
+2. parameterized module #()();
+3. localparam -> Fixed value internally i.e. inside the module and can not be changed outside the module.
+4. `<=`: non-blocking assignment operator: Schedules assignment concurrently rather than parallelly.
